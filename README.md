@@ -69,3 +69,66 @@ bug_explanation_agent/
 │   └── sqlite_memory.py       # DB connection and session management logic
 └── utils/
     └── helpers.py             # Utility functions (e.g., language detection)
+
+```
+
+---
+
+## Installation & Setup
+
+### 1. Clone the repository
+
+Ensure all files are placed in the correct directory structure.
+
+### 2. Create a virtual environment
+
+```bash
+python -m venv venv
+
+```
+
+### 3. Activate the environment
+
+* **Windows:** `venv\Scripts\activate`
+* **macOS/Linux:** `source venv/bin/activate`
+
+### 4. Install dependencies
+
+```bash
+pip install -r requirements.txt
+
+```
+
+### 5. Configure API Keys
+
+Create a `.env` file in the root directory and add your Groq API key:
+
+```env
+GROQ_API_KEY=your_groq_api_key_here
+
+```
+
+---
+
+## How to Run
+
+Start the Streamlit application with the following command:
+
+```bash
+streamlit run app.py
+
+```
+
+*The application will open automatically in your default web browser.*
+
+---
+
+## Usage Guide
+
+You can interact with the agent in three distinct ways within the same chat thread:
+
+1. **Bug Detection:** Paste broken code along with an error message. The agent will stream a structured report detailing the Bug Type, Location, Root Cause, Fix, and Explanation.
+2. **Code Explanation:** Paste working code and ask, *"Explain what this does."* The agent will bypass the bug hunter and provide a step-by-step summary.
+3. **Conversational Follow-ups:** Ask questions like *"Can you give me a real-world example of this?"* The agent will read the chat history and respond naturally as a tutor.
+
+Use the **Sidebar** to start a new fresh conversation, load a previous one, or delete an old thread from your local database.
