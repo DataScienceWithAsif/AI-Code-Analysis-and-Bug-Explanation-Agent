@@ -132,3 +132,8 @@ You can interact with the agent in three distinct ways within the same chat thre
 3. **Conversational Follow-ups:** Ask questions like *"Can you give me a real-world example of this?"* The agent will read the chat history and respond naturally as a tutor.
 
 Use the **Sidebar** to start a new fresh conversation, load a previous one, or delete an old thread from your local database.
+
+## Web app interface
+<img width="1338" height="621" alt="image" src="https://github.com/user-attachments/assets/4989973f-27d5-48af-b87c-7b89a431dbea" />
+<img width="1356" height="618" alt="image" src="https://github.com/user-attachments/assets/6e022195-9ce1-4ad7-ae0d-dfc934596aad" />
+
