@@ -1,139 +1,204 @@
-# AI Code Analysis and Bug Explanation Agent
+# 🐞 AI Code Analysis & Bug Explanation Agent
 
-An AI-powered debugging and tutoring assistant built with **LangGraph**, **Groq**, **Streamlit**, and **SQLite persistence**. 
+<p align="center">
+  <strong>Modern Streamlit + LangGraph assistant for code understanding, bug detection, and guided fixes.</strong>
+</p>
 
-This system acts as an intelligent coding tutor. It accepts user input, classifies the intent, and dynamically routes the request to either hunt down a bug, explain complex code block-by-block, or answer conversational follow-up questions using short-term memory.
-
----
-
-## Project Overview
-
-Debugging and understanding code are some of the most time-consuming tasks in software development. This project helps students, junior developers, and educators interact with code through a conversational AI agent.
-
-The agent follows a dynamic, multi-stage workflow:
-
-1. **Task Classification & Memory Injection:** Determines if the user is reporting a bug, asking for an explanation, or asking a follow-up question based on the current context.
-2. **Dynamic Routing:** * **Bug Pipeline:** Analyzes code, detects the bug type, finds the location, suggests a fix, and explains the solution.
-    * **Understanding Pipeline:** Analyzes working code and provides a step-by-step educational summary.
-    * **Conversational Pipeline:** Acts as a general AI tutor, answering questions based on the chat history.
-3. **Response Generation:** Streams real-time structured output or conversational text to the Streamlit UI.
+<p align="center">
+  <img alt="Python" src="https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white">
+  <img alt="Streamlit" src="https://img.shields.io/badge/UI-Streamlit-FF4B4B?logo=streamlit&logoColor=white">
+  <img alt="LangGraph" src="https://img.shields.io/badge/Orchestration-LangGraph-121D33">
+  <img alt="LLM" src="https://img.shields.io/badge/LLM-Groq%20(Llama%203.3%2070B)-00A67E">
+  <img alt="Persistence" src="https://img.shields.io/badge/Memory-SQLite-003B57?logo=sqlite&logoColor=white">
+</p>
 
 ---
 
-## Key Features
+## ✨ What This Repository Does
 
-* **Dynamic LangGraph Workflow:** Conditional edges route prompts to specialized LLM nodes based on user intent.
-* **Conversational Memory:** Passes recent chat history into the graph state, allowing the AI to answer contextual follow-up questions (e.g., "Why did you use a dictionary instead of a list?").
-* **Live Token Streaming:** Bug reports are streamed live to the UI for a highly responsive feel.
-* **Advanced Session Management:** Dual SQLite databases track user sessions in the UI while LangGraph maintains internal state checkpoints.
-* **Interactive Sidebar:** Users can seamlessly generate new threads, load historical conversations, and fully delete old chats.
-* **Fail-Safe Parsing:** Custom Python logic prevents the application from crashing if the LLM hallucinates formatting.
+This project is an AI coding assistant that helps you:
 
----
+- **Detect and explain bugs** in pasted code + error context.
+- **Understand working code** with educational, step-by-step explanations.
+- **Ask follow-up questions** inside the same chat thread with memory-aware responses.
 
-## Technology Stack
-
-* **Python 3.11**
-* **Streamlit** (Frontend UI)
-* **LangGraph** (Agentic State Machine & Routing)
-* **langgraph-checkpoint-sqlite** (State Persistence)
-* **Groq API** (Llama-3.3-70b-versatile for fast LLM inference)
-* **SQLite3** (Custom UI metadata tracking)
-* **python-dotenv**
+It uses a **LangGraph routing workflow** to classify user intent and send requests to specialized nodes.
 
 ---
 
-## Project Structure
+## 🧠 Core Features
+
+- **Intent Classification + Dynamic Routing**
+  - `bug_detection`
+  - `code_understanding`
+  - `follow_up_question`
+- **Structured Debugging Output** (bug type, location, root cause, fix, explanation)
+- **Live Streaming Responses** for bug-report formatting
+- **Conversation Memory** using SQLite-backed thread/message history
+- **Persistent LangGraph Checkpoints** for agent state continuity
+- **Modern Streamlit UI** with session sidebar controls
+
+---
+
+## 🏗️ Architecture Overview
 
 ```text
-bug_explanation_agent/
-├── app.py                     # Main Streamlit UI and dynamic rendering logic
-├── graph.py                   # LangGraph state machine and conditional routing
-├── state.py                   # TypedDict defining the agent's memory payload
-├── requirements.txt
-├── .env.example
-├── README.md
-├── data/                      # Auto-generated SQLite databases
-│   ├── conversations.db       # UI sidebar tracking
-│   └── langgraph_checkpoints.db # LangGraph internal memory
-├── prompts/
-│   └── templates.py           # System prompts for all LLM nodes
-├── nodes/
-│   ├── classifier.py          # Determines user intent
-│   ├── understanding.py       # Code summarization logic
-│   ├── bug_detector.py        # Identifies bug type and root cause
-│   ├── fix_suggester.py       # Writes corrected code
-│   ├── follow_up_handler.py   # Handles contextual chat queries
-│   └── response_generator.py  # Streams formatted bug reports
-├── memory/
-│   └── sqlite_memory.py       # DB connection and session management logic
-└── utils/
-    └── helpers.py             # Utility functions (e.g., language detection)
-
+User Prompt
+   │
+   ▼
+Task Classifier
+   ├── follow_up_question ──► Follow-up Handler ──► End
+   └── code_understanding/bug_detection
+             ▼
+      Code Understanding
+         ├── code_understanding ──► End
+         └── bug_detection
+                  ▼
+             Bug Detector
+                  ▼
+             Fix Suggester
+                  ▼
+                 End
 ```
 
 ---
 
-## Installation & Setup
+## 📁 Project Structure
 
-### 1. Clone the repository
+```text
+AI-Code-Analysis-and-Bug-Explanation-Agent/
+├── app.py                        # Streamlit app UI + interaction loop
+├── graph.py                      # LangGraph nodes and routing logic
+├── state.py                      # Shared state schema (AgentState)
+├── requirements.txt              # Python dependencies
+├── README.md
+├── nodes/
+│   ├── classifier.py             # Intent classification
+│   ├── understanding.py          # Code explanation stage
+│   ├── bug_detector.py           # Bug type/location/root cause extraction
+│   ├── fix_suggester.py          # Fix generation
+│   ├── follow_up_handler.py      # Context-aware Q&A replies
+│   └── response_generator.py     # Streaming final response formatter
+├── prompts/
+│   └── templates.py              # Prompt templates for all stages
+├── memory/
+│   └── sqlite_memory.py          # Conversation/session persistence layer
+└── utils/
+    └── helpers.py                # Language detection + formatting helpers
+```
 
-Ensure all files are placed in the correct directory structure.
+> `data/` databases are auto-created at runtime and ignored by Git.
 
-### 2. Create a virtual environment
+---
+
+## ⚙️ Prerequisites
+
+- Python **3.11+**
+- A valid **Groq API key**
+
+---
+
+## 🚀 Quick Start
+
+### 1) Clone and enter the project
+
+```bash
+git clone https://github.com/DataScienceWithAsif/AI-Code-Analysis-and-Bug-Explanation-Agent.git
+cd AI-Code-Analysis-and-Bug-Explanation-Agent
+```
+
+### 2) Create and activate a virtual environment
 
 ```bash
 python -m venv venv
-
 ```
 
-### 3. Activate the environment
+- **Windows:** `venv\Scripts\activate`
+- **macOS/Linux:** `source venv/bin/activate`
 
-* **Windows:** `venv\Scripts\activate`
-* **macOS/Linux:** `source venv/bin/activate`
-
-### 4. Install dependencies
+### 3) Install dependencies
 
 ```bash
 pip install -r requirements.txt
-
 ```
 
-### 5. Configure API Keys
+### 4) Configure environment variables
 
-Create a `.env` file in the root directory and add your Groq API key:
+Create a `.env` file in the project root:
 
 ```env
 GROQ_API_KEY=your_groq_api_key_here
-
 ```
 
----
-
-## How to Run
-
-Start the Streamlit application with the following command:
+### 5) Run the app
 
 ```bash
 streamlit run app.py
-
 ```
-
-*The application will open automatically in your default web browser.*
 
 ---
 
-## Usage Guide
+## 🧪 How to Use
 
-You can interact with the agent in three distinct ways within the same chat thread:
+Inside the chat input, you can do the following:
 
-1. **Bug Detection:** Paste broken code along with an error message. The agent will stream a structured report detailing the Bug Type, Location, Root Cause, Fix, and Explanation.
-2. **Code Explanation:** Paste working code and ask, *"Explain what this does."* The agent will bypass the bug hunter and provide a step-by-step summary.
-3. **Conversational Follow-ups:** Ask questions like *"Can you give me a real-world example of this?"* The agent will read the chat history and respond naturally as a tutor.
+1. **Bug Detection Mode**
+   - Paste buggy code and (optionally) error messages/logs.
+   - The assistant returns: **Bug Type, Location, Root Cause, Fix, Explanation**.
 
-Use the **Sidebar** to start a new fresh conversation, load a previous one, or delete an old thread from your local database.
+2. **Code Understanding Mode**
+   - Paste valid code and ask for explanation/summarization.
+   - The assistant returns an educational, step-by-step breakdown.
 
-## Web app interface
-<img width="1338" height="621" alt="image" src="https://github.com/user-attachments/assets/4989973f-27d5-48af-b87c-7b89a431dbea" />
-<img width="1356" height="618" alt="image" src="https://github.com/user-attachments/assets/6e022195-9ce1-4ad7-ae0d-dfc934596aad" />
+3. **Follow-up Q&A Mode**
+   - Ask contextual follow-up questions in the same thread.
+   - The assistant uses recent chat history for continuity.
 
+---
+
+## 🖥️ UI Walkthrough
+
+- **Main panel:** chat conversation with role-based avatars and streaming output.
+- **Sidebar controls:**
+  - Create new thread
+  - Load previous thread
+  - Delete thread
+- **Persistence:**
+  - `data/conversations.db` for UI sessions and messages
+  - `data/langgraph_checkpoints.db` for LangGraph checkpoints
+
+### Screenshots
+
+<img width="1338" height="621" alt="AI agent UI screenshot 1" src="https://github.com/user-attachments/assets/4989973f-27d5-48af-b87c-7b89a431dbea" />
+<img width="1356" height="618" alt="AI agent UI screenshot 2" src="https://github.com/user-attachments/assets/6e022195-9ce1-4ad7-ae0d-dfc934596aad" />
+
+---
+
+## 🔐 Security & Configuration Notes
+
+- Never commit your `.env` file.
+- This repo ignores `.env` and `data/` by default.
+- Model calls use Groq API credentials from environment variables.
+
+---
+
+## 🛠️ Troubleshooting
+
+- **Missing API key / auth errors:** verify `GROQ_API_KEY` in `.env`.
+- **`ModuleNotFoundError`:** ensure virtualenv is active, then reinstall requirements.
+- **Streamlit not launching:** run `streamlit run app.py` from the repository root.
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make your changes.
+4. Open a pull request.
+
+---
+
+## 📌 Summary
+
+If you need an assistant that can **analyze code, explain bugs clearly, and keep context across follow-up questions**, this project gives you a complete local workflow with a clean Streamlit experience.
